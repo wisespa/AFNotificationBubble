@@ -87,10 +87,12 @@
 - (void)checkEnabled
 {
     [UIView animateWithDuration:0.2 animations:^(void) {
-        self.alpha = ([AFAppBoosterSDK isInitialized]) ? 1.0 : 0.0;
-        
-        if ([AFAppBoosterSDK isInitialized]
-            && self.alpha == 1.0
+        //modified by John, add check of pending notification
+        NSInteger pendingNotifications = [AFAppBoosterSDK numberOfPendingNotifications];
+
+        self.alpha = ([AFAppBoosterSDK isInitialized] && pendingNotifications > 0) ? 1.0 : 0.0;
+
+        if (self.alpha == 1.0
             && [_delegate respondsToSelector:@selector(AFBubbleButtonWillShow:)])
         {
             [_delegate AFBubbleButtonWillShow:self];
