@@ -47,7 +47,7 @@
         _bubbleRed   = [[UIImage imageNamed:kAFNotificationBubbleImageEnabled] retain];
 
         // button's design (bubble image + text)
-        [self setBackgroundImage:_bubbleEmpty forState:UIControlStateNormal];
+        [self setBackgroundImage:_bubbleRed forState:UIControlStateNormal];
         [self setAlpha:0.f];
         
         // label
@@ -87,10 +87,7 @@
 - (void)checkEnabled
 {
     [UIView animateWithDuration:0.2 animations:^(void) {
-        //modified by John, add check of pending notification
-        NSInteger pendingNotifications = [AFAppBoosterSDK numberOfPendingNotifications];
-
-        self.alpha = ([AFAppBoosterSDK isInitialized] && pendingNotifications > 0) ? 1.0 : 0.0;
+        self.alpha = ([AFAppBoosterSDK isInitialized]) ? 1.0 : 0.0;
 
         if (self.alpha == 1.0
             && [_delegate respondsToSelector:@selector(AFBubbleButtonWillShow:)])
@@ -110,6 +107,7 @@
     NSInteger pendingNotifications;
     
     pendingNotifications = [AFAppBoosterSDK numberOfPendingNotifications];
+    
     if (pendingNotifications > 0)
     {
         [_labelNotificationsNumber setText:[NSString stringWithFormat:@"%d", pendingNotifications]];
@@ -117,10 +115,11 @@
     }
     else
     {
-        [_labelNotificationsNumber setText:@""];
-        [self setBackgroundImage:_bubbleEmpty forState:UIControlStateNormal];
-        [self setAlpha:0];//disable display, modified by John
+        [_labelNotificationsNumber setText:[NSString stringWithFormat:@"%d", 0]];
+        [self setBackgroundImage:_bubbleRed forState:UIControlStateNormal];
     }
+    
+    [self setAlpha:1.0];
 }
 
 @end
